@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "592717102159",
+    "firebase_url": "https://thedognextdoor-ccceb.firebaseio.com",
+    "project_id": "thedognextdoor-ccceb",
+    "storage_bucket": "thedognextdoor-ccceb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592717102159:android:8c4cbdb9320d7533903e3a",
+        "android_client_info": {
+          "package_name": "com.android.thedognextdoor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592717102159-bktjioc7uldus9vqalhhcqaa3ji1r9kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQXQLVaQGGKkLp60Kz1DmFWMKWS1TiBg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592717102159-bktjioc7uldus9vqalhhcqaa3ji1r9kc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
