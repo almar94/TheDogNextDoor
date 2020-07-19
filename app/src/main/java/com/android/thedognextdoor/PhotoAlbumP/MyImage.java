@@ -40,8 +40,7 @@ public class MyImage extends AppCompatActivity {
 
     public StorageReference storageReference;
     public FirebaseStorage firebaseStorage;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
