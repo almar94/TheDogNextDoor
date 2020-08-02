@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.thedognextdoor.R;
@@ -23,11 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.onItemClickListener {
+
+    Button addPhoto;
+
     private RecyclerView recyclerView;
     private PhotoAdapter adapter;
 
     public FirebaseStorage firebaseStorage;
     public DatabaseReference databaseReference;
+    public StorageReference storageReference;
     public ValueEventListener mDBListener;
 
     private List<Upload> mUpload;
@@ -38,6 +45,8 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_photo_album);
 
+        addPhoto = findViewById(R.id.addPhoto);
+
         recyclerView = findViewById(R.id.rvPhotoAlbum);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -47,7 +56,17 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(ShowPhotoAlbum.this);
 
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowPhotoAlbum.this, PhotoAlbum.class);
+                startActivity(intent);
+            }
+        });
+
+
         firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("Uploads");
         databaseReference = FirebaseDatabase.getInstance().getReference("Uploads");
         mDBListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,4 +118,6 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
         super.onDestroy();
         databaseReference.removeEventListener(mDBListener);
     }
+
+
 }

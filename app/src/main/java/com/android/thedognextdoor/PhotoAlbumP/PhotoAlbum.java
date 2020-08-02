@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -19,12 +20,14 @@ import com.android.thedognextdoor.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class PhotoAlbum extends AppCompatActivity {
 
@@ -37,7 +40,8 @@ public class PhotoAlbum extends AppCompatActivity {
 
     public StorageReference storageReference;
     public DatabaseReference databaseReference;
-    int count;
+    public FirebaseAuth firebaseAuth;
+
 
     public StorageTask storageTask;
 
@@ -80,9 +84,7 @@ public class PhotoAlbum extends AppCompatActivity {
     }
 
     private void openPhotoAlbum() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), TAKE_IMAGE_CODE);
     }
 
@@ -95,9 +97,9 @@ public class PhotoAlbum extends AppCompatActivity {
             Glide.with(this)
                     .load(filePath)
                     .into(photoAlbum);
-//            Picasso.get().load(filePath).into(photoAlbum);
         }
     }
+
 
     private String getExtension(Uri uri) {
         ContentResolver cr = getContentResolver();
@@ -109,7 +111,7 @@ public class PhotoAlbum extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading...");
         progressDialog.show();
-        count++;
+
         if (filePath != null) {
             StorageReference photoReference = storageReference.child(System.currentTimeMillis()
                     + "." + getExtension(filePath));
@@ -118,7 +120,7 @@ public class PhotoAlbum extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.setMessage("Uploaded....");
                     Toast.makeText(PhotoAlbum.this, "Upload succesfully", Toast.LENGTH_SHORT).show();
-                    Upload upload = new Upload("Photo" + count, taskSnapshot.getUploadSessionUri().toString());
+                    Upload upload = new Upload("Photo", taskSnapshot.getUploadSessionUri().toString());
                     String uploadId = databaseReference.push().getKey();
                     databaseReference.child(uploadId).setValue(upload);
                     progressDialog.cancel();

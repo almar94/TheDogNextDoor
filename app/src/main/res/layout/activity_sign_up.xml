@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/dog2" />
+        app:srcCompat="@drawable/german_shepherd" />
 
     <TextView
         android:id="@+id/sing"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/button"
-        android:text="SING UP"
+        android:text="SIGN UP"
         android:textColor="#ffff"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"

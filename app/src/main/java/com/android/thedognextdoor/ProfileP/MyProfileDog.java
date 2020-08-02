@@ -1,5 +1,7 @@
 package com.android.thedognextdoor.ProfileP;
 
+import android.net.Uri;
+
 public class MyProfileDog {
 
     private String myName;
@@ -10,11 +12,15 @@ public class MyProfileDog {
     private String dogGender;
     private String dogDescription;
 
+    private String status;
+
+    private String imageURL;
+    private String id;
+
     public MyProfileDog() {
     }
 
-    public MyProfileDog(String myName, String myAge, String myGender,
-                        String myDescription, String dogName, String dogGender, String dogDescription) {
+    public MyProfileDog(String myName, String myAge, String myGender, String myDescription, String dogName, String dogGender, String dogDescription, String status, String id) {
         this.myName = myName;
         this.myAge = myAge;
         this.myGender = myGender;
@@ -22,6 +28,8 @@ public class MyProfileDog {
         this.dogName = dogName;
         this.dogGender = dogGender;
         this.dogDescription = dogDescription;
+        this.status = status;
+        this.id = id;
     }
 
     public String getMyName() {
@@ -79,5 +87,29 @@ public class MyProfileDog {
 
     public void setDogDescription(String dogDescription) {
         this.dogDescription = dogDescription;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

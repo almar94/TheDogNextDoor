@@ -3,9 +3,13 @@ package com.android.thedognextdoor.PhotoAlbumP;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.thedognextdoor.MainPage;
+import com.android.thedognextdoor.ProfileP.BuildMyProfile;
+import com.android.thedognextdoor.ProfileP.MyProfileDog;
 import com.android.thedognextdoor.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,25 +44,28 @@ public class MyImage extends AppCompatActivity {
     private Uri filePath;
     int TAKE_IMAGE_CODE = 10021;
 
+
+
     public StorageReference storageReference;
-    public FirebaseStorage firebaseStorage;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
+        storageReference = FirebaseStorage.getInstance().getReference("MyProfileImage");
+
 
         profileImageView = findViewById(R.id.profileImage);
         buttonUpload = findViewById(R.id.buttonUpload_me);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         if (user.getPhotoUrl() != null) {
             Glide.with(this)
                     .load(user.getPhotoUrl())
                     .into(profileImageView);
+
         }
     }
 
@@ -77,6 +86,7 @@ public class MyImage extends AppCompatActivity {
                 Bitmap bitmap1 = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 profileImageView.setImageBitmap(bitmap1);
                 handleUpload(bitmap1);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -147,5 +157,6 @@ public class MyImage extends AppCompatActivity {
                     }
                 });
     }
+
 
 }

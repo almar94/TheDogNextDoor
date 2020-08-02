@@ -1,39 +1,51 @@
 package com.android.thedognextdoor;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.android.thedognextdoor.ChatMessageP.ConversationFragment;
+import com.android.thedognextdoor.ProfileP.BuildMyProfile;
 import com.android.thedognextdoor.ProfileP.ProfileFragment;
+import com.android.thedognextdoor.SearchMatchesP.SearchFragment;
+import com.android.thedognextdoor.SettingsP.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.reflect.Reflection.initialize;
 
 public class MainPage extends AppCompatActivity {
 
-    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+    public DatabaseReference databaseReference;
+    public FirebaseUser fUser;
 
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
-            Manifest.permission.ACCESS_FINE_LOCATION };
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(bnv);
     }
@@ -42,7 +54,7 @@ public class MainPage extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            Fragment selectedFragment= null;
+            Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.nav_person:
                     selectedFragment = new ProfileFragment();
@@ -63,7 +75,27 @@ public class MainPage extends AppCompatActivity {
         }
     };
 
-    protected void checkPermissionsLocation () {
+
+    private void CheckStatus(String status) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("MyUsers").child(fUser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+        databaseReference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CheckStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CheckStatus("offline");
+    }
+
+    protected void checkPermissionsLocation() {
         final List<String> missingPermissions = new ArrayList<String>();
         // check all required dynamic permissions
         for (final String permission : REQUIRED_SDK_PERMISSIONS) {
@@ -80,8 +112,7 @@ public class MainPage extends AppCompatActivity {
         } else {
             final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
             Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
-            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
-                    grantResults);
+            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS, grantResults);
         }
     }
 
@@ -104,5 +135,4 @@ public class MainPage extends AppCompatActivity {
                 break;
         }
     }
-
 }

@@ -1,11 +1,5 @@
 package com.android.thedognextdoor.ProfileP;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -24,6 +18,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.android.thedognextdoor.MainPage;
 import com.android.thedognextdoor.R;
 import com.android.thedognextdoor.RegistrationP.SignIn;
@@ -36,6 +36,9 @@ import java.util.Calendar;
 
 public class BuildMyProfile extends AppCompatActivity {
 
+    private static final String TAG = "SearchActivity";
+    private static final int REQUEST_CODE = 1;
+
     Button newSingIn;
     EditText myName, myDescription, dogName, dogDescription;
     String myName2, myAge2, myGender2, myDescription2, dogName2, dogDescription2, dogGender2;
@@ -43,33 +46,25 @@ public class BuildMyProfile extends AppCompatActivity {
     TextView myAge;
     private ProgressBar spinner;
 
-    private static final String TAG = "SearchActivity";
-    private static final int REQUEST_CODE = 1;
-
     private FirebaseAuth firebaseAuth;
+    public DatabaseReference myRef;
 
-
-    private DatabaseReference databaseReference;
 
     DatePickerDialog.OnDateSetListener dateSetListener;
     Calendar calendar = Calendar.getInstance();
     Calendar today = Calendar.getInstance();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_my_profile);
 
-        verifyPermissions();
-
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null) {
             finish();
             startActivity(new Intent(getApplicationContext(), SignIn.class));
         }
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        myRef = FirebaseDatabase.getInstance().getReference("MyUsers");
 
         myName = findViewById(R.id.myNameText);
         myAge = findViewById(R.id.myAgeText);
@@ -81,16 +76,6 @@ public class BuildMyProfile extends AppCompatActivity {
 
         statusGroup1 = findViewById(R.id.radioGroup);
         statusGroup2 = findViewById(R.id.radioGroupDog);
-
-//        myImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent profileIntent = new Intent();
-//                profileIntent.setType("image/*");
-//                profileIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(profileIntent, "Select Image."), PICK_IMAGE);
-//            }
-//        });
 
         myAge.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -131,9 +116,6 @@ public class BuildMyProfile extends AppCompatActivity {
                     case R.id.radioButtonFemale:
                         myGender2 = "Female";
                         break;
-                    case R.id.radioButtonOther:
-                        myGender2 = "Other";
-                        break;
                 }
 
             }
@@ -153,16 +135,19 @@ public class BuildMyProfile extends AppCompatActivity {
                 }
             }
         });
-        newSingIn = findViewById(R.id.newSingIn);
 
+        newSingIn = findViewById(R.id.newSingIn);
         newSingIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                verifyPermissions();
                 myName2 = myName.getText().toString().trim();
                 myAge2 = myAge.getText().toString().trim();
                 myDescription2 = myDescription.getText().toString().trim();
                 dogName2 = dogName.getText().toString().trim();
                 dogDescription2 = dogDescription.getText().toString().trim();
+                String id = firebaseAuth.getUid();
+                String status = "online";
                 if (myName2.isEmpty() && myAge2.isEmpty() && myDescription2.isEmpty() &&
                         dogName2.isEmpty() && dogDescription2.isEmpty()) {
                     String msg = "Please enter information in all fields";
@@ -171,11 +156,10 @@ public class BuildMyProfile extends AppCompatActivity {
                     if (!myName2.isEmpty() && !myAge2.isEmpty() && !myDescription2.isEmpty() &&
                             !dogName2.isEmpty() && !dogDescription2.isEmpty()) {
                         MyProfileDog myProfileDog = new MyProfileDog(myName2, myAge2, myGender2, myDescription2,
-                                dogName2, dogGender2, dogDescription2);
+                                dogName2, dogGender2, dogDescription2, status, id);
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        databaseReference.child(user.getUid()).setValue(myProfileDog);
+                        myRef.child(user.getUid()).setValue(myProfileDog);
                         Toast.makeText(getApplicationContext(), "User information updated", Toast.LENGTH_LONG).show();
-   //                     sendUserData();
                         spinner.setVisibility(View.VISIBLE);
                         Intent intent = new Intent(BuildMyProfile.this, MainPage.class);
                         startActivity(intent);
@@ -185,26 +169,6 @@ public class BuildMyProfile extends AppCompatActivity {
             }
         });
     }
-
-
-//    private void sendUserData() {
-//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//        // Get "User UID" from Firebase > Authentification > Users.
-//        DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
-//        StorageReference imageReference = storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic"); //User id/Images/Profile Pic.jpg
-//        UploadTask uploadTask = imageReference.putFile(imagePath);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(BuildMyProfile.this, "Error: Uploading profile picture", Toast.LENGTH_SHORT).show();
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Toast.makeText(BuildMyProfile.this, "Profile picture uploaded", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
     private void verifyPermissions() {
         Log.d(TAG, "verifyPermissions: asking user for permissions");
@@ -227,8 +191,6 @@ public class BuildMyProfile extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        verifyPermissions();
     }
-
 
 }

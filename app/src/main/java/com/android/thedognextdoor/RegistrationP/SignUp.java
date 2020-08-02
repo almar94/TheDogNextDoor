@@ -68,18 +68,12 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-//                                SignUpInfo.push().setValue(mAuth.getUid());
-//                                String Uid = mAuth.getUid();
-//                                SignUpInfo.push().setValue(new SignUpObj(EmailSTR, PasswordSTR, Uid));
-//                                        FirebaseUser user = mAuth.getCurrentUser();
-//                                        updateUI(user);
                                         Intent intent = new Intent(SignUp.this, BuildMyProfile.class);
                                         startActivityForResult(intent, CODE);
                                         finish();
                                     } else {
                                         String msg = task.getException().getMessage();
                                         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
-   //                                     updateUI(null);
                                     }
                                 }
 
@@ -98,7 +92,6 @@ public class SignUp extends AppCompatActivity {
         super.onStart();
         //    Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-      //  updateUI(currentUser);
     }
 
 

@@ -1,39 +1,41 @@
 package com.android.thedognextdoor.ChatMessageP;
 
-import java.util.Date;
 
 public class ChatMessage {
-    private String messageText;
-    private String messageUser;
-    private long messageTime;
+    private String sender;
+    private String receiver;
+    private String message;
 
-    public ChatMessage(String messageText, String messageUser) {
-        this.messageText = messageText;
-        this.messageUser = messageUser;
-        messageTime = new Date().getTime();
+    public ChatMessage(String sender, String receiver, String message) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public ChatMessage() {
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public String getSender() {
+        return sender;
     }
 
-    public String getMessageUser() {
-        return messageUser;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
