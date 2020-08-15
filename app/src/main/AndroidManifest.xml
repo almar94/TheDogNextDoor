@@ -19,13 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FriendsP.FriendsPhotoAlbum"></activity>
+        <activity android:name=".FriendsP.FriendsProfile" />
         <activity android:name=".SettingsP.EditActivity" />
         <activity android:name=".MatchesP.MatchesActivity" />
         <activity android:name=".SettingsP.MatchMeActivity" />
         <activity android:name=".ChatMessageP.MessageActivity" />
         <activity android:name=".PhotoAlbumP.ShowPhotoAlbum" />
-        <activity android:name=".PhotoAlbumP.PhotoAlbum" />
-        <activity android:name=".PhotoAlbumP.MyImage" />
+        <activity android:name=".PhotoAlbumP.AddToPhotoAlbum" />
         <activity android:name=".RegistrationP.ResetPassword" />
         <activity android:name=".RegistrationP.SignIn" />
         <activity android:name=".ProfileP.BuildMyProfile" />

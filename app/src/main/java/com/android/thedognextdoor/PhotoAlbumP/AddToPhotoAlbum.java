@@ -27,9 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
-public class PhotoAlbum extends AppCompatActivity {
+public class AddToPhotoAlbum extends AppCompatActivity {
 
     ImageView photoAlbum;
     Button buttonUpload, buttonPhotoAlbum, chooseButton;
@@ -43,6 +42,7 @@ public class PhotoAlbum extends AppCompatActivity {
     public FirebaseAuth firebaseAuth;
 
 
+
     public StorageTask storageTask;
 
     @Override
@@ -50,9 +50,10 @@ public class PhotoAlbum extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_album);
 
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        storageReference = FirebaseStorage.getInstance().getReference("Uploads");
-        databaseReference = FirebaseDatabase.getInstance().getReference("Uploads");
+        storageReference = FirebaseStorage.getInstance().getReference(firebaseAuth.getCurrentUser().getUid()).child("UploadsToStorage");
+        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getCurrentUser().getUid()).child("Uploads");
 
         photoAlbum = findViewById(R.id.photo_album);
         buttonUpload = findViewById(R.id.buttonUpload);
@@ -69,7 +70,7 @@ public class PhotoAlbum extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (storageTask != null && storageTask.isInProgress()) {
-                    Toast.makeText(PhotoAlbum.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddToPhotoAlbum.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadPhoto();
                 }
@@ -113,30 +114,36 @@ public class PhotoAlbum extends AppCompatActivity {
         progressDialog.show();
 
         if (filePath != null) {
-            StorageReference photoReference = storageReference.child(System.currentTimeMillis()
+            final StorageReference photoReference = storageReference.child(System.currentTimeMillis()
                     + "." + getExtension(filePath));
             storageTask = photoReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.setMessage("Uploaded....");
-                    Toast.makeText(PhotoAlbum.this, "Upload succesfully", Toast.LENGTH_SHORT).show();
-                    Upload upload = new Upload("Photo", taskSnapshot.getUploadSessionUri().toString());
-                    String uploadId = databaseReference.push().getKey();
-                    databaseReference.child(uploadId).setValue(upload);
-                    progressDialog.cancel();
+                    Toast.makeText(AddToPhotoAlbum.this, "Upload succesfully", Toast.LENGTH_SHORT).show();
+                    photoReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Upload upload = new Upload("Photo", uri.toString());
+                            String uploadId = databaseReference.push().getKey();
+                            databaseReference.child(uploadId).setValue(upload);
+                            progressDialog.cancel();
+                        }
+                    });
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(PhotoAlbum.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddToPhotoAlbum.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            Toast.makeText(PhotoAlbum.this, "no photo selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddToPhotoAlbum.this, "no photo selected", Toast.LENGTH_SHORT).show();
         }
     }
     private void photoAlbumClass() {
-        Intent intent = new Intent(PhotoAlbum.this, ShowPhotoAlbum.class);
+        Intent intent = new Intent(AddToPhotoAlbum.this, ShowPhotoAlbum.class);
         startActivity(intent);
     }
 }

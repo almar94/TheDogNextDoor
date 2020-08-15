@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.thedognextdoor.ChatMessageP.Adapters.MessageAdapter;
+import com.android.thedognextdoor.FriendsP.FriendsPhotoAlbum;
+import com.android.thedognextdoor.FriendsP.FriendsProfile;
 import com.android.thedognextdoor.ProfileP.MyProfileDog;
 import com.android.thedognextdoor.R;
 import com.bumptech.glide.Glide;
@@ -71,6 +73,14 @@ public class MessageActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageViewUsers);
         send_btn = findViewById(R.id.btn_send);
         msg_editText = findViewById(R.id.text_send);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MessageActivity.this, FriendsProfile.class);
+                startActivity(intent);
+            }
+        });
 
         recyclerView = findViewById(R.id.recyclerView_fromToolbar);
         recyclerView.setHasFixedSize(true);

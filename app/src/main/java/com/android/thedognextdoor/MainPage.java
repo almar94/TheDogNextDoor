@@ -48,6 +48,7 @@ public class MainPage extends AppCompatActivity {
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(bnv);
+        bottomNavigationView.setSelectedItemId(R.id.nav_person);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener bnv = new BottomNavigationView.OnNavigationItemSelectedListener() {

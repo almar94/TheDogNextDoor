@@ -1,18 +1,13 @@
 package com.android.thedognextdoor.ProfileP;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,22 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.android.thedognextdoor.MainPage;
-import com.android.thedognextdoor.PhotoAlbumP.MyImage;
-import com.android.thedognextdoor.PhotoAlbumP.PhotoAlbum;
 import com.android.thedognextdoor.PhotoAlbumP.ShowPhotoAlbum;
-import com.android.thedognextdoor.PhotoAlbumP.Upload;
 import com.android.thedognextdoor.R;
 import com.android.thedognextdoor.RegistrationP.SignIn;
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,20 +34,14 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
-
     Button photoAlbum;
     private TextView myName, myAge, myGender, myDescription, dogName, dogGender, dogDescription;
-    String myName2, myAge2, myGender2, myDescription2, dogName2, dogDescription2, dogGender2;
 
     public FirebaseAuth firebaseAuth;
     public FirebaseDatabase firebaseDatabase;

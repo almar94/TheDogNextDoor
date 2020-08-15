@@ -28,8 +28,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         this.context = context;
         this.mUpload = mUpload;
     }
-    public void setData(List<Upload> uploads){
-        this.mUpload=uploads;
+
+    public void setData(List<Upload> uploads) {
+        this.mUpload = uploads;
         notifyDataSetChanged();
     }
 
@@ -44,7 +45,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Upload uploadCurrent = mUpload.get(position);
-        Log.d("TAG", "onBindViewHolder: "+ uploadCurrent.getPhotoUrl());
+        Log.d("TAG", "onBindViewHolder: " + uploadCurrent.getPhotoUrl());
         if (uploadCurrent.getPhotoUrl() != null) {
             Glide.with(context)
                     .load(uploadCurrent.getPhotoUrl())
@@ -94,8 +95,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             if (mListener != null) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                            mListener.onDeleteClick(position);
-                            return true;
+                    mListener.onDeleteClick(position);
+                    return true;
                 }
             }
             return false;

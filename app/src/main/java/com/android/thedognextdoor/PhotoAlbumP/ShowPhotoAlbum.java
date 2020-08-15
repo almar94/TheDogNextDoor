@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.android.thedognextdoor.MainPage;
 import com.android.thedognextdoor.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,8 +30,8 @@ import java.util.List;
 
 public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.onItemClickListener {
 
-    Button addPhoto;
 
+    Button  addPhoto, back_to_profile;
     private RecyclerView recyclerView;
     private PhotoAdapter adapter;
 
@@ -36,6 +39,7 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
     public DatabaseReference databaseReference;
     public StorageReference storageReference;
     public ValueEventListener mDBListener;
+    public FirebaseAuth firebaseAuth;
 
     private List<Upload> mUpload;
     public StorageReference imageRef;
@@ -45,7 +49,9 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_photo_album);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         addPhoto = findViewById(R.id.addPhoto);
+        back_to_profile = findViewById(R.id.Back_to_profile);
 
         recyclerView = findViewById(R.id.rvPhotoAlbum);
         recyclerView.setHasFixedSize(true);
@@ -59,15 +65,24 @@ public class ShowPhotoAlbum extends AppCompatActivity implements PhotoAdapter.on
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ShowPhotoAlbum.this, PhotoAlbum.class);
+                Intent intent = new Intent(ShowPhotoAlbum.this, AddToPhotoAlbum.class);
+                startActivity(intent);
+            }
+        });
+
+        back_to_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowPhotoAlbum.this, MainPage.class);
                 startActivity(intent);
             }
         });
 
 
+
         firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference("Uploads");
-        databaseReference = FirebaseDatabase.getInstance().getReference("Uploads");
+        storageReference = FirebaseStorage.getInstance().getReference(firebaseAuth.getCurrentUser().getUid()).child("UploadsToStorage");
+        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getCurrentUser().getUid()).child("Uploads");
         mDBListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

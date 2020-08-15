@@ -71,7 +71,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference profileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/MyProfileImage.jpg");
+        StorageReference profileRef = storageReference.child("users/"+firebaseAuth.getUid()+"/MyProfileImage.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
