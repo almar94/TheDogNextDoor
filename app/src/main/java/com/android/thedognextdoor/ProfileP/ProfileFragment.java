@@ -111,9 +111,9 @@ public class ProfileFragment extends Fragment {
 //                                .into(myImageView);
 //                    }
                 } else {
-                    Intent intent = new Intent(getContext(), SignIn.class);
-                    startActivity(intent);
-                    getActivity().finish();
+//                    Intent intent = new Intent(getContext(), SignIn.class);
+//                    startActivity(intent);
+//                    getActivity().finish();
                 }
 
             }

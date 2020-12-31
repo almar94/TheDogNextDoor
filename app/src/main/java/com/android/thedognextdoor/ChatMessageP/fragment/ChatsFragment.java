@@ -51,12 +51,15 @@ public class ChatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
         recyclerView = view.findViewById(R.id.rv_ChatsFragment);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         usersList = new ArrayList<>();
+
         databaseReference = FirebaseDatabase.getInstance()
                 .getReference("ChatList").child(firebaseUser.getUid());
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -86,6 +89,7 @@ public class ChatsFragment extends Fragment {
                 mUsers.clear();
                 for (DataSnapshot snapshotB : snapshot.getChildren()) {
                     MyProfileDog myProfileDog = snapshotB.getValue(MyProfileDog.class);
+
                     for (ChatList chatList : usersList) {
                         if (myProfileDog.getId() != null) {
                             if (myProfileDog.getId().equals(chatList.getId())) {
